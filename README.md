@@ -13,8 +13,8 @@
 
 1. 저장소 클론
 ```bash
-git clone https://github.com/yourusername/just3lines.git
-cd just3lines
+git clone https://github.com/hanip-devops/Just3Lines.git
+cd Just3Lines
 ```
 
 2. 가상환경 생성 및 활성화
