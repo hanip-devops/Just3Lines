@@ -11,7 +11,7 @@
 
 ## 기술 스택
 
-- Python 3.8+
+- Python 3.9+
 - FastAPI
 - OpenAI GPT-3.5
 - Pydantic
@@ -48,8 +48,8 @@ just3lines/
 
 1. 저장소 클론
 ```bash
-git clone https://github.com/yourusername/just3lines.git
-cd just3lines
+git clone https://github.com/hanip-devops/Just3Lines.git
+cd Just3Lines
 ```
 
 2. 가상환경 생성 및 활성화
@@ -66,7 +66,7 @@ pip install -r requirements.txt
 ```
 
 4. 환경 변수 설정
-`.env` 파일을 생성하고 다음 내용을 추가:
+`.env` 파일을 생성하고 OpenAI API 키를 설정합니다:
 ```
 OPENAI_API_KEY=your_api_key_here
 ```
