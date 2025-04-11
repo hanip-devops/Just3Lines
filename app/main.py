@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from app.api.routes import router
 from app.core.config import get_settings
+import os
 
 settings = get_settings()
 
@@ -11,8 +12,9 @@ app = FastAPI(
     version=settings.APP_VERSION
 )
 
-# 정적 파일 설정
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# 정적 파일 설정 (테스트 환경이 아닐 때만)
+if not os.getenv("TESTING"):
+    app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # 라우터 등록
 app.include_router(router)
