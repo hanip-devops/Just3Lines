@@ -1,0 +1,8 @@
+[tool.bandit]
+exclude_dirs = ["tests", "venv"]
+skips = ["B101"]  # assert 문 사용 허용
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --tb=short" 
