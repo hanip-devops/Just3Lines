@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-from app import app
+from app.main import app
 import pytest
 from unittest.mock import patch
 
@@ -10,7 +10,7 @@ def test_read_root():
     assert response.status_code == 200
     assert "text/html" in response.headers["content-type"]
 
-@patch('app.client.chat.completions.create')
+@patch('app.services.openai_service.client.chat.completions.create')
 def test_summarize_korean(mock_create):
     # 모의 응답 설정
     mock_create.return_value.choices = [
@@ -36,7 +36,7 @@ def test_summarize_korean(mock_create):
     # API 호출 확인
     mock_create.assert_called_once()
 
-@patch('app.client.chat.completions.create')
+@patch('app.services.openai_service.client.chat.completions.create')
 def test_summarize_english(mock_create):
     # 모의 응답 설정
     mock_create.return_value.choices = [
