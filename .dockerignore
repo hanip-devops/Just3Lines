@@ -1,0 +1,25 @@
+# Git
+.git
+.gitignore
+
+# 환경 및 가상 환경
+venv/
+.env
+.env.*
+!.env.example
+
+# Python 캐시 파일
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# 테스트 관련 파일
+.pytest_cache/
+.coverage
+htmlcov/
+
+# 로그 및 임시 파일
+*.log
+.DS_Store

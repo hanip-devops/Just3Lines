@@ -114,6 +114,44 @@ uvicorn app.main:app --reload
 pytest tests/
 ```
 
+## Docker로 실행하기
+
+### Docker Compose 이용하기
+
+1. 환경 변수 설정
+```bash
+cp .env.example .env
+# .env 파일을 편집하여 OPENAI_API_KEY 설정
+```
+
+2. 도커 컴포즈로 서비스 실행
+```bash
+docker-compose up -d
+```
+
+3. 서비스 중지
+```bash
+docker-compose down
+```
+
+### Docker 직접 이용하기
+
+1. Docker 이미지 빌드
+```bash
+docker build -t just3lines .
+```
+
+2. Docker 컨테이너 실행
+```bash
+docker run -d -p 8000:8000 --env-file .env --name just3lines just3lines
+```
+
+3. 컨테이너 중지 및 삭제
+```bash
+docker stop just3lines
+docker rm just3lines
+```
+
 ## 라이선스
 
-MIT License 
+MIT License
