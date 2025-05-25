@@ -1,0 +1,32 @@
+name: Deploy to NCP Server
+
+on:
+  push:
+    branches:
+      - feature/monitor  # ← 자동 배포 대상 브랜치
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H 110.165.17.155 >> ~/.ssh/known_hosts
+
+      - name: Deploy via SSH
+        run: |
+          ssh root@110.165.17.155 << 'EOF'
+            cd ~/Just3Lines
+            git pull origin feature/monitor
+            docker stop monitor-container || true
+            docker rm monitor-container || true
+            docker build -t monitor-app .
+            docker run -d -p 80:8000 --env-file .env --name monitor-container monitor-app
+          EOF

@@ -13,8 +13,8 @@ app = FastAPI(
 )
 
 # 정적 파일 설정 (테스트 환경이 아닐 때만)
-if not os.getenv("TESTING"):
-    app.mount("/static", StaticFiles(directory="static"), name="static")
+#if not os.getenv("TESTING"):
+ #   app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # 라우터 등록
 app.include_router(router)
