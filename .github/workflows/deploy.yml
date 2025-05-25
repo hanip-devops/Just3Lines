@@ -25,6 +25,7 @@ jobs:
           ssh root@110.165.17.155 << 'EOF'
             cd ~/Just3Lines
             git pull origin feature/monitor
+            docker ps --filter "publish=80" -q | xargs -r docker stop
             docker stop monitor-container || true
             docker rm monitor-container || true
             docker build -t monitor-app .
