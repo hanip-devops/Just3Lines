@@ -24,9 +24,7 @@ jobs:
         run: |
           ssh root@110.165.17.155 << 'EOF'
             cd ~/Just3Lines
-            git fetch origin feature/monitor
-            git reset --hard origin/feature/monitor
-            git clean -fd
+            git pull origin feature/monitor
             docker ps --filter "publish=80" -q | xargs -r docker stop
             docker stop monitor-container || true
             docker rm monitor-container || true
