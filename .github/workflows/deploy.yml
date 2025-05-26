@@ -18,11 +18,11 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H 110.165.17.155 >> ~/.ssh/known_hosts
+          ssh-keyscan -H 101.79.8.142 >> ~/.ssh/known_hosts
 
       - name: Deploy via SSH
         run: |
-          ssh root@110.165.17.155 << 'EOF'
+          ssh root@101.79.8.142 << 'EOF'
             cd ~/Just3Lines
             git status           # 변경사항 확인
             git checkout feature/monitor  # 브랜치 전환
