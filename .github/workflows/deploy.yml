@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NCP_CONTAINER_REGISTRY: ${{ secrets.NCP_CONTAINER_REGISTRY_URL }}
-      #NCP_REPOSITORY_NAME: ${{ secrets.NCP_REPOSITORY_NAME }}
+      NCP_REPOSITORY_NAME: ${{ secrets.NCP_REPOSITORY_NAME }}
       # 이미지 이름에 브랜치명을 포함하여 다른 배포와 구분합니다.
       #IMAGE_NAME: ${{ secrets.NCP_CONTAINER_REGISTRY_URL }}/${{ secrets.NCP_REPOSITORY_NAME }}/${{ github.event.repository.name }}
       IMAGE_TAG: feature-monitor # 이 브랜치 전용 태그 (또는 github.sha 사용 가능)
