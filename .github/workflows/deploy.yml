@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        # 자동으로 push된 브랜치(feature/monitor)의 코드를 체크아웃합니다.
+        ### 자동으로 push된 브랜치(feature/monitor)의 코드를 체크아웃합니다.
 
       - name: Set lowercase names
         run: |
