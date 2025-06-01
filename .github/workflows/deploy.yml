@@ -1,6 +1,6 @@
 name: Deploy feature-monitor to NCP
 
-  # 'feature/monitor' 브랜치에 push가 발생할 때 워크플로우 실행
+# 'feature/monitor' 브랜치에 push가 발생할 때 워크플로우 실행
 on:
   push:
     branches:
@@ -21,17 +21,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        ##### 자동으로 push된 브랜치(feature/monitor)의 코드를 체크아웃합니다.
+        # 자동으로 push된 브랜치(feature/monitor)의 코드를 체크아웃합니다.
 
       - name: Set lowercase names
         run: |
           echo "LOWERCASE_GITHUB_REPO_NAME=$(echo '${{ github.event.repository.name }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-            
 
       - name: Define Image Name
         run: |
-          echo "IMAGE_NAME=${{ env.NCP_CONTAINER_REGISTRY }}/${{ secrets.NCP_REPOSITORY_NAME }}/${{ env.LOWERCASE_GITHUB_REPO_NAME }}" >> $GITHUB_ENV  
-
+          echo "IMAGE_NAME=${{ env.NCP_CONTAINER_REGISTRY }}/${{ secrets.NCP_REPOSITORY_NAME }}/${{ env.LOWERCASE_GITHUB_REPO_NAME }}" >> $GITHUB_ENV
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
@@ -50,8 +48,7 @@ jobs:
           push: true
           tags: |
             ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-            ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}-${{ github.sha }} 
-
+            ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}-${{ github.sha }}
       - name: Deploy to NCP Server (feature-monitor)
         uses: appleboy/ssh-action@master
         with:
@@ -62,21 +59,20 @@ jobs:
           script: |
             echo "Logging into NCP Container Registry on server..."
             docker login -u ${{ secrets.NCP_ACCESS_KEY }} -p ${{ secrets.NCP_SECRET_KEY }} ${{ env.NCP_CONTAINER_REGISTRY }}
-              
+            
             echo "Pulling image for feature/monitor branch..."
             docker pull ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-              
+            
             echo "Stopping and removing existing feature/monitor container (if any)..."
             docker stop ${{ env.CONTAINER_NAME }} || true
             docker rm ${{ env.CONTAINER_NAME }} || true
-              
+            
             echo "Running new feature/monitor container..."
-          # feature/monitor 브랜치 배포용 포트, 환경변수 등을 다르게 설정할 수 있습니다.
-            # 예: 다른 포트(8081) 사용, 개발 환경 변수 설정
+            
             docker run -d -p 8081:3000 --name ${{ env.CONTAINER_NAME }} \
               -e NODE_ENV=development \
               -e BRANCH_NAME=feature-monitor \
               ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-              
+            
             echo "Cleaning up old images..."
             docker image prune -af
