@@ -35,6 +35,7 @@ jobs:
       with:
         project_id: ${{ env.PROJECT_ID }}
         workload_identity_provider: 'projects/772476664444/locations/global/workloadIdentityPools/j3l-pool-id/providers/j3l-github-auth'
+        service_account: 'just3lines-github@just3lines.iam.gserviceaccount.com'
 
     - name: Configure Docker for Artifact Registry
       run: |
