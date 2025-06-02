@@ -13,7 +13,7 @@ jobs:
       NCP_CONTAINER_REGISTRY: ${{ secrets.NCP_CONTAINER_REGISTRY_URL }}
       NCP_REPOSITORY_NAME: ${{ secrets.NCP_REPOSITORY_NAME }}
 
-      IMAGE_TAG: feature-monitor # 이 브랜치 전용 태그 (또는 github.sha 사용 가능)
+      IMAGE_TAG: feature-monitor
       # 컨테이너 이름도 다른 배포와 충돌하지 않도록 브랜치명을 포함합니다.
       CONTAINER_NAME: my-app-container-feature-monitor
 
