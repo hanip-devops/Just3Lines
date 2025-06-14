@@ -18,7 +18,7 @@ jobs:
     env:
       PROJECT_ID: 'just3lines'
       REGION_KR: 'asia-northeast3'  # GCP 리전 (서울)
-      REGION_JP: 'asia-northeast1-a'  # GCP 리전 (도쿄)
+      REGION_JP: 'asia-northeast1'  # GCP 리전 (도쿄)
       REPO_NAME: 'j3l-docker-registry'  # Artifact Registry 저장소 이름
       IMAGE: 'just3lines-api'
       IMAGE_TAG: ${{ github.sha }}
