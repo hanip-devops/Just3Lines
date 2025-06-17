@@ -17,6 +17,8 @@ jobs:
       # 컨테이너 이름도 다른 배포와 충돌하지 않도록 브랜치명을 포함합니다.
       CONTAINER_NAME: my-app-container-feature-monitor
 
+      ENV_FILE_NAME: .env.feature-monitor
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
