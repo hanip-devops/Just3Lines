@@ -1,15 +1,30 @@
 version: "3.8"
 
 services:
+#  app:
+#    build: .
+#    container_name: just3lines
+#    ports:
+#      - "8000:8000"
+#    volumes:
+#      - .:/app
+#    environment:
+#      - OPENAI_API_KEY=${OPENAI_API_KEY}
+#    restart: unless-stopped
+#    # 개발시에는 코드 변경시 자동 재시작
+#    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
   app:
-    build: .
-    container_name: just3lines
+    # CI/CD가 푸시한 이미지를 여기서 사용합니다.
+    # 변수를 사용하기 위해 .env 파일을 이용합니다.
+    image: ${IMAGE_NAME}:${IMAGE_TAG}
+    container_name: ${CONTAINER_NAME}
+    restart: always
     ports:
-      - "8000:8000"
-    volumes:
-      - .:/app
+      - "8082:8000" # 포트 매핑
+    env_file:
+      # 서버에 생성될 .env 파일 경로
+      - ./${ENV_FILE_NAME}
     environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-    restart: unless-stopped
-    # 개발시에는 코드 변경시 자동 재시작
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      # docker-compose에서 직접 환경변수 주입
+      - NODE_ENV=development
+      - BRANCH_NAME=feature-monitor
