@@ -84,29 +84,29 @@ jobs:
 #            echo "Cleaning up old images..."
 #            docker image prune -af
 
-             cd /root/Just3Lines
+            cd /root/Just3Lines
             
             # 3. .env 파일 생성
             #    docker-compose가 이 파일을 읽어 변수를 설정합니다.
-                    echo "Creating .env file for docker-compose..."
+            echo "Creating .env file for docker-compose..."
             # 기존 환경변수 + docker-compose.yml에 필요한 변수 추가
-                    echo "IMAGE_NAME=${{ env.IMAGE_NAME }}" > ./${{ env.ENV_FILE_NAME }}
-                    echo "IMAGE_TAG=${{ env.IMAGE_TAG }}" >> ./${{ env.ENV_FILE_NAME }}
-                    echo "CONTAINER_NAME=${{ env.CONTAINER_NAME }}" >> ./${{ env.ENV_FILE_NAME }}
-                    echo "ENV_FILE_NAME=${{ env.ENV_FILE_NAME }}" >> ./${{ env.ENV_FILE_NAME }}
-                    echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> ./${{ env.ENV_FILE_NAME }}
+            echo "IMAGE_NAME=${{ env.IMAGE_NAME }}" > ./${{ env.ENV_FILE_NAME }}
+            echo "IMAGE_TAG=${{ env.IMAGE_TAG }}" >> ./${{ env.ENV_FILE_NAME }}
+            echo "CONTAINER_NAME=${{ env.CONTAINER_NAME }}" >> ./${{ env.ENV_FILE_NAME }}
+            echo "ENV_FILE_NAME=${{ env.ENV_FILE_NAME }}" >> ./${{ env.ENV_FILE_NAME }}
+            echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> ./${{ env.ENV_FILE_NAME }}
             
             # 4. 최신 이미지를 pull
             #    docker-compose가 자동으로 pull 해주지만, 명시적으로 하는 것이 더 안정적입니다.
-                    echo "Pulling the latest image..."
-                    docker-compose pull app
+            echo "Pulling the latest image..."
+            docker-compose pull app
             
             # 5. docker-compose로 컨테이너 실행 (기존 컨테이너는 자동 교체)
             #    docker-compose up은 이름이 같은 컨테이너가 있으면, 
             #    이미지가 변경된 경우에만 컨테이너를 중지/삭제하고 새로 만듭니다.
-                    echo "Starting service with docker-compose..."
-                    docker-compose up -d
+            echo "Starting service with docker-compose..."
+            docker-compose up -d
             
             # 6. 불필요한 이미지 정리 (동일)
-                    echo "Cleaning up old images..."
-                    docker image prune -af
+            echo "Cleaning up old images..."
+            docker image prune -af
