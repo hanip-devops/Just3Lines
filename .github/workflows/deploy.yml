@@ -61,7 +61,8 @@ jobs:
             echo "Logging into NCP Container Registry on server..."
             docker login -u ${{ secrets.NCP_ACCESS_KEY }} -p ${{ secrets.NCP_SECRET_KEY }} ${{ env.NCP_CONTAINER_REGISTRY }}
             
-            echo "Copying docker-compose file to server..."
+            
+            echo "Creating docker-compose.yml file on server..."
             cat <<'EOF' > ~/docker-compose.yml
             version: '3.8'
             services:
@@ -77,28 +78,23 @@ jobs:
                   - BRANCH_NAME=feature-monitor
                 restart: always
             EOF
-            
+
             
             echo "Creating .env file on the server: ~/${{ env.ENV_FILE_NAME }}"
-            cat <<EOF > ~/${{ env.ENV_FILE_NAME }}
-            
+            cat <<'EOF' > ~/${{ env.ENV_FILE_NAME }}
             IMAGE_NAME=${{ env.IMAGE_NAME }}
-            IMAGE_TAG=${{ env.IMAGE_TAG }}
+            IMAGE_TAG=${{ env.UNIQUE_IMAGE_TAG }}
             CONTAINER_NAME=${{ env.CONTAINER_NAME }}
-            
-            
+            ENV_FILE_NAME=${{ env.ENV_FILE_NAME }}
             OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
             EOF
+
             
+            echo "Pulling the latest image and running container with docker-compose..."
             
-            echo "Pulling the latest image using docker-compose..."
-            docker-compose -f ~/${{ env.COMPOSE_FILE_NAME }} --env-file ~/${{ env.ENV_FILE_NAME }} pull
-            
-            
-            echo "Running new container with docker-compose..."
-            
-            docker-compose -f ~/${{ env.COMPOSE_FILE_NAME }} --env-file ~/${{ env.ENV_FILE_NAME }} up -d --remove-orphans
-            
+            docker-compose -f ~/docker-compose.yml --env-file ~/${{ env.ENV_FILE_NAME }} pull
+            docker-compose -f ~/docker-compose.yml --env-file ~/${{ env.ENV_FILE_NAME }} up -d --force-recreate --remove-orphans
+
             
             echo "Cleaning up old images..."
             docker image prune -af
