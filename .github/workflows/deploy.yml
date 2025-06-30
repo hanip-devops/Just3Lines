@@ -98,6 +98,10 @@ jobs:
             echo "Stopping existing services..."
             docker-compose -f ${{ env.COMPOSE_FILE_NAME }} --env-file ${{ env.ENV_FILE_NAME }} down || true
             
+            echo "Force removing existing container if it exists..."
+            docker stop my-app-container-feature-monitor || true
+            docker rm my-app-container-feature-monitor || true
+            
             echo "Pulling latest images..."
             docker-compose -f ${{ env.COMPOSE_FILE_NAME }} --env-file ${{ env.ENV_FILE_NAME }} pull
             
