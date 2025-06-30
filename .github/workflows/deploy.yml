@@ -53,23 +53,50 @@ jobs:
       - name: Deploy to NCP Server (feature-monitor)
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.NCP_SERVER_HOST }} # feature/monitor 배포용 서버가 다르다면 별도 Secret 사용
-          username: ${{ secrets.NCP_SERVER_USERNAME }}
-          key: ${{ secrets.DEPLOY_KEY }}
-          port: 22
-          script: |
-            echo "Logging into NCP Container Registry on server..."
-            docker login -u ${{ secrets.NCP_ACCESS_KEY }} -p ${{ secrets.NCP_SECRET_KEY }} ${{ env.NCP_CONTAINER_REGISTRY }}
-            
-            
-            echo "Pulling the latest image using docker-compose..."
-            docker-compose -f ~/${{ env.COMPOSE_FILE_NAME }} --env-file ~/${{ env.ENV_FILE_NAME }} pull
-
-                        
-            echo "Running new container with docker-compose..."
-                        
-            docker-compose -f ~/${{ env.COMPOSE_FILE_NAME }} --env-file ~/${{ env.ENV_FILE_NAME }} up -d --remove-orphans
-
-                        
-            echo "Cleaning up old images..."
-            docker image prune -af
+            host: ${{ secrets.NCP_SERVER_HOST }}
+            username: ${{ secrets.NCP_SERVER_USERNAME }}
+            key: ${{ secrets.DEPLOY_KEY }}
+            port: 22
+            script: |
+              
+              export IMAGE_NAME="${{ env.IMAGE_NAME }}"
+              export IMAGE_TAG="${{ env.UNIQUE_IMAGE_TAG }}"
+              export CONTAINER_NAME="${{ env.CONTAINER_NAME }}"
+              export ENV_FILE_NAME="${{ env.ENV_FILE_NAME }}"
+              export OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}"
+              
+              
+              echo "Logging into NCP Container Registry on server..."
+              docker login -u ${{ secrets.NCP_ACCESS_KEY }} -p ${{ secrets.NCP_SECRET_KEY }} ${{ env.NCP_CONTAINER_REGISTRY }}
+              
+              
+              echo "Creating docker-compose.yml file on server..."
+              cat <<EOF > ~/docker-compose.yml
+              services:
+                app:
+                  image: $IMAGE_NAME:$IMAGE_TAG
+                  container_name: $CONTAINER_NAME
+                  ports:
+                    - "8082:8000"
+                  env_file:
+                    - ./$ENV_FILE_NAME
+                  environment:
+                    - NODE_ENV=development
+                    - BRANCH_NAME=feature-monitor
+                  restart: always
+              EOF
+              
+              
+              echo "Creating .env file on the server: ~/$ENV_FILE_NAME"
+              cat <<EOF > ~/$ENV_FILE_NAME
+              OPENAI_API_KEY=$OPENAI_API_KEY
+              EOF
+              
+              
+              echo "Pulling the latest image and running container with docker-compose..."
+              docker-compose -f ~/docker-compose.yml pull
+              docker-compose -f ~/docker-compose.yml up -d --force-recreate --remove-orphans
+              
+              
+              echo "Cleaning up old images..."
+              docker image prune -af
