@@ -86,6 +86,10 @@ jobs:
                   restart: always
               EOF
               
+              echo "--- DEBUG: Checking generated docker-compose.yml content ---"
+              cat -ET ~/docker-compose.yml
+              echo "--------------------- END OF DEBUG ---------------------"
+              
               
               echo "Creating .env file on the server: ~/$ENV_FILE_NAME"
               cat <<EOF > ~/$ENV_FILE_NAME
